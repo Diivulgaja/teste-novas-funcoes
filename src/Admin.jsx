@@ -82,23 +82,27 @@ useEffect(() => {
       setOrders(docs);
 
       // disparar alertas para novos pedidos
-      if (novos.length > 0) {
-        novos.forEach(p => {
-          if ("Notification" in window && Notification.permission === "granted") {
-            new Notification("Novo pedido recebido!", {
-              body: `Pedido #${p.id} - R$ ${Number(p.total).toFixed(2)}`,
-              tag: p.id
-            });
-            // ativa banner visual animado
+if (novos.length > 0) {
+  novos.forEach(p => {
+    // Notificação nativa
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification("Novo pedido recebido!", {
+        body: `Pedido #${p.id} - R$ ${Number(p.total).toFixed(2)}`,
+        tag: p.id
+      });
+    }
+
+    // Banner visual animado
     setShowNewOrderBanner(true);
     setTimeout(() => setShowNewOrderBanner(false), 5000);
-}
-          }
-          playBeep();
-        });
-      }
 
-      setLoading(false);
+    // Som
+    playBeep();
+  });
+}
+
+setLoading(false);
+
     },
     (err) => {
       console.error("Erro:", err);
